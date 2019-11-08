@@ -1,0 +1,24 @@
+import wave
+import numpy as np
+from os import listdir
+import scipy
+import matplotlib.pyplot as plt
+import sklearn
+import sklearn.mixture
+
+import python_speech_features as python_speech_features
+
+lista_plikow = listdir("E:\Studia\Semestr V\Technologia Mowy\ProjektI\Projekt_nr_1\\train\\")
+slownik={} #stworzenie pustego słownika
+lista_mfcc_nazwa=[] #stworzenie pustej listy 
+for i in range(0,len(lista_plikow)):
+    nazwa=lista_plikow[i] #wydobycie nazwy pliku  
+    plik_=wave.open("train/"+nazwa, 'rb') #wczytanie pliku  
+    plik = plik_.readframes(-1)
+    plik = np.fromstring(plik, 'Int16')
+    macierz_MFCC=python_speech_features.base.mfcc(plik, samplerate=plik_.getframerate(), numcep=13,
+                                     nfft=int(0.03 * plik_.getframerate()), winfunc=np.hamming) #mfcc dla jednego pliku
+    lista_mfcc_nazwa.append([macierz_MFCC,lista_plikow[i]]) #dodanie mfcc i nazwy do listy
+
+print(lista_mfcc_nazwa[1])
+print(len(lista_mfcc_nazwa)) #220 - zgadza sie 
