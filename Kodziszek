@@ -10,7 +10,9 @@ import python_speech_features as python_speech_features
 
 lista_plikow = listdir("E:\Studia\Semestr V\Technologia Mowy\ProjektI\Projekt_nr_1\\train\\")
 
-lista_mfcc_nazwa=[] #stworzenie pustej listy 
+lista_mfcc_nazwa=[] #stworzenie pustej listy //// listy na co? tego długaśnego zbioru mfcc dla konkretnej liczby?
+# wepchnę się z komentarzem. Osobiście użyłabym tutaj wavfile zamiast wave, zwraca od razu framerate i dane, no i sam zamyka użyty plik
+# o ile dobrze pamiętam
 for i in range(0,len(lista_plikow)):
     nazwa=lista_plikow[i] #wydobycie nazwy pliku  
     plik_=wave.open("train/"+nazwa, 'rb') #wczytanie pliku  
