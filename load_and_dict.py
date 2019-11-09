@@ -12,13 +12,17 @@ import pickle
 nazwa_pliku = 'lista_mfcc_nazwa.pkl'
 pkl_file = open(nazwa_pliku, 'rb')
 
-data = pickle.load(pkl_file)
+lista_mfcc_nazwa = pickle.load(pkl_file)
 pkl_file.close()
 
 # tworzenie słownika
 
 slownik = {}  # stworzenie pustego słownika
-# lista_plikow = lista_mfcc_nazwa[: [:,1]] # nie wiem jak to wydobyć ze środka :/
+
+lista_plikow=[] #stworzenie pustej listy i wydobycie nazw ze środka
+for i in range(0,len(lista_mfcc_nazwa)-1):
+    lista_plikow.append(lista_mfcc_nazwa[i][1]) 
+
 for i in range(0, 22):
     if i == 0:
         slownik[str(lista_plikow[i * 10 + 1])[0:3]] = lista_mfcc_nazwa[
