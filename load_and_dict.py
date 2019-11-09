@@ -80,5 +80,20 @@ GMM_7=GaussianMix(wszystkie_cyfry_7,8,100)
 GMM_8=GaussianMix(wszystkie_cyfry_8,8,100)
 GMM_9=GaussianMix(wszystkie_cyfry_9,8,100)
 
+wszystkie_GMM=[GMM_0,GMM_1,GMM_2,GMM_3,GMM_4,GMM_5,GMM_6,GMM_7,GMM_8,GMM_9]
 
+def prawdopodobienstwo_cyfry(gmmx,mfcc_cyfry):
+    p = np.exp(gmmx.score(mfcc_cyfry)) * 0.1 / (np.exp(GMM_0.score(mfcc_cyfry)) * 0.1 + np.exp(GMM_1.score(mfcc_cyfry)) * 0.1
+                                             + np.exp(GMM_2.score(mfcc_cyfry)) * 0.1 + np.exp(GMM_3.score(mfcc_cyfry)) * 0.1
+                                             + np.exp(GMM_4.score(mfcc_cyfry)) * 0.1 + np.exp(GMM_5.score(mfcc_cyfry)) * 0.1
+                                             + np.exp(GMM_6.score(mfcc_cyfry)) * 0.1 + np.exp(GMM_7.score(mfcc_cyfry)) * 0.1
+                                             + np.exp(GMM_8.score(mfcc_cyfry)) * 0.1 + np.exp(GMM_9.score(mfcc_cyfry)) * 0.1)
+    return p
+
+p=[]
+for i in range(0,len(wszystkie_GMM)):
+    p.append(prawdopodobienstwo_cyfry(wszystkie_GMM[i], wszystkie_cyfry_0))
+    print("log(p(MFCC_0 | GMM_"+str(i)+" = ", p[i])
+
+print(sum(p)) #sumują sie do 1 - sztos
 
