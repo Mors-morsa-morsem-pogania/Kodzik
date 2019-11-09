@@ -61,7 +61,24 @@ wszystkie_cyfry_7=wszystkie_cyfry(7,lista_mfcc_nazwa)
 wszystkie_cyfry_8=wszystkie_cyfry(8,lista_mfcc_nazwa)
 wszystkie_cyfry_9=wszystkie_cyfry(9,lista_mfcc_nazwa)
 
+def GaussianMix(macierz,n,n_iter):
+    gmm=sklearn.mixture.GaussianMixture(n_components=n, covariance_type='diag', tol=0.001, reg_covar=1e-06,
+                                            max_iter=n_iter, n_init=1, init_params='kmeans', weights_init=None,
+                                            means_init=None, precisions_init=None, random_state=None,
+                                            warm_start=False, verbose=0, verbose_interval=10)
+    gmm.fit(macierz)
+    return gmm
 
+GMM_0=GaussianMix(wszystkie_cyfry_0,8,100)
+GMM_1=GaussianMix(wszystkie_cyfry_1,8,100)
+GMM_2=GaussianMix(wszystkie_cyfry_2,8,100)
+GMM_3=GaussianMix(wszystkie_cyfry_3,8,100)
+GMM_4=GaussianMix(wszystkie_cyfry_4,8,100)
+GMM_5=GaussianMix(wszystkie_cyfry_5,8,100)
+GMM_6=GaussianMix(wszystkie_cyfry_6,8,100)
+GMM_7=GaussianMix(wszystkie_cyfry_7,8,100)
+GMM_8=GaussianMix(wszystkie_cyfry_8,8,100)
+GMM_9=GaussianMix(wszystkie_cyfry_9,8,100)
 
 
 
