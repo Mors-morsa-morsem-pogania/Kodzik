@@ -42,3 +42,26 @@ print(slownik["AO1"][1][1])
 # print(slownik["AO1"][0][0])
 # # Odwołanie sie do nazwy całego pliku w liście w słowniku: np. slownik["AO1"][0][1]
 # print(slownik["AO1"][0][1])
+
+def wszystkie_cyfry(nr_cyfry,lista_mfcc_nazwa):
+    cyfry=[]
+    for i in range(0, 22):
+        cyfry.extend(lista_mfcc_nazwa[i * 10+nr_cyfry][0])
+    cyfry = np.array(cyfry)
+    return cyfry
+
+wszystkie_cyfry_0=wszystkie_cyfry(0,lista_mfcc_nazwa)
+wszystkie_cyfry_1=wszystkie_cyfry(1,lista_mfcc_nazwa)
+wszystkie_cyfry_2=wszystkie_cyfry(2,lista_mfcc_nazwa)
+wszystkie_cyfry_3=wszystkie_cyfry(3,lista_mfcc_nazwa)
+wszystkie_cyfry_4=wszystkie_cyfry(4,lista_mfcc_nazwa)
+wszystkie_cyfry_5=wszystkie_cyfry(5,lista_mfcc_nazwa)
+wszystkie_cyfry_6=wszystkie_cyfry(6,lista_mfcc_nazwa)
+wszystkie_cyfry_7=wszystkie_cyfry(7,lista_mfcc_nazwa)
+wszystkie_cyfry_8=wszystkie_cyfry(8,lista_mfcc_nazwa)
+wszystkie_cyfry_9=wszystkie_cyfry(9,lista_mfcc_nazwa)
+
+
+
+
+
