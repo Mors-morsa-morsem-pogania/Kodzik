@@ -1,0 +1,24 @@
+import numpy as np
+from os import listdir
+import scipy
+from scipy.io import wavfile as wav
+from os import listdir
+import pickle
+import python_speech_features as psf
+
+lista_plikow = listdir("E:\Studia\Semestr V\Technologia Mowy\ProjektI\Projekt_nr_1\\train\\")
+
+lista_mfcc_nazwa=[]
+
+for i in range(0,len(lista_plikow)):
+    nazwa = lista_plikow[i]  # wydobycie nazwy pliku
+    fs, dane_z_pliku = wav.read(("E:\Studia\Semestr V\Technologia Mowy\ProjektI\Projekt_nr_1\\train\\" + nazwa))
+    macierz_MFCC=psf.base.mfcc(dane_z_pliku, samplerate=fs,  winlen=0.025, winstep=0.001, numcep=13,
+                                    nfilt=26, nfft=int(0.025*fs), lowfreq=0, highfreq=None, preemph=0.97,
+                                    ceplifter=22, appendEnergy=True, winfunc=np.hamming)
+    lista_mfcc_nazwa.append([macierz_MFCC,lista_plikow[i]])
+    # plik_.close()
+
+output = open('lista_mfcc_nazwa.pkl', 'wb')
+pickle.dump(lista_mfcc_nazwa, output)
+output.close()    #ważne!
