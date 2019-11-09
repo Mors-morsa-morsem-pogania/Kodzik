@@ -15,3 +15,26 @@ pkl_file = open(nazwa_pliku, 'rb')
 data = pickle.load(pkl_file)
 pkl_file.close()
 
+# tworzenie słownika
+
+slownik = {}  # stworzenie pustego słownika
+# lista_plikow = lista_mfcc_nazwa[: [:,1]] # nie wiem jak to wydobyć ze środka :/
+for i in range(0, 22):
+    if i == 0:
+        slownik[str(lista_plikow[i * 10 + 1])[0:3]] = lista_mfcc_nazwa[
+                                                      0:10]  # wybranie 10 cyfr dla danego mówcy i przypisanie ich do klucza (mówcy w słowniku)
+    else:
+        slownik[str(lista_plikow[i * 10 + 1])[0:3]] = lista_mfcc_nazwa[10 * i + 1:10 * (i + 1)]
+
+print(len(slownik))  # dlugość 22 - zgadza sie
+print(slownik["AO1"][1][1])
+
+# Przydatne:
+# # Odwołanie sie do wiersza w słowniku: np. slownik["AO1"]
+# print(slownik["AO1"])
+# # Odwołanie sie do wiersza w liście która jest w słowniku: np. slownik["AO1"][0]
+# print(slownik["AO1"][0])
+# # Odwołanie sie do macierzy MFCC w liście w słowniku: np. slownik["AO1"][0][0]
+# print(slownik["AO1"][0][0])
+# # Odwołanie sie do nazwy całego pliku w liście w słowniku: np. slownik["AO1"][0][1]
+# print(slownik["AO1"][0][1])
