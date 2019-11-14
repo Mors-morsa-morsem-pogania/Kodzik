@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import sklearn
 import sklearn.mixture
 import pickle
+from collections import defaultdict
 
 # odczyt z pliku listy mfcc_nazwa
 nazwa_pliku = 'lista_mfcc_nazwa.pkl'
@@ -17,7 +18,7 @@ pkl_file.close()
 
 # tworzenie słownika
 
-slownik = {}  # stworzenie pustego słownika
+slownik = defaultdict(list)  # stworzenie pustego słownika
 
 lista_plikow=[] #stworzenie pustej listy i wydobycie nazw ze środka
 for i in range(0,len(lista_mfcc_nazwa)-1):
@@ -97,3 +98,23 @@ for i in range(0,len(wszystkie_GMM)):
 
 print(sum(p)) #sumują sie do 1 - sztos
 
+xvalid=sklearn.model_selection.KFold(n_splits=5)
+xvalid.get_n_splits(slownik)
+# klucze=list(slownik.keys())
+klucze=[*slownik]
+print(klucze)
+print(xvalid)
+
+for train_ids, test_ids in xvalid.split(slownik):
+    X_train = {}
+    X_test = {}
+    print("Train: ", train_ids, "Test: ", test_ids)
+    for train in train_ids:
+        X_train[klucze[train]]=slownik[klucze[train]]
+    for test in test_ids:
+        X_test[klucze[test]] = slownik[klucze[test]]
+    print(len(X_train),len(X_test))
+    #przejść po wszstkich trainach i testach na raz
+    #nowy model będzie stworzony tylko dla mfcc dla mówców z pociągu
+    #stworzenie nowej turbo macierzy mfcc dla pociągu i oddzielnie dla testowych
+    #dwa podsłowniki
