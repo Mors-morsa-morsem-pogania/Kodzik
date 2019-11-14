@@ -24,12 +24,12 @@ lista_plikow=[] #stworzenie pustej listy i wydobycie nazw ze środka
 for i in range(0,len(lista_mfcc_nazwa)-1):
     lista_plikow.append(lista_mfcc_nazwa[i][1]) 
 
-for i in range(0, 22):
+for i in range(0, 21):
     if i == 0:
-        slownik[str(lista_plikow[i * 10 + 1])[0:3]] = lista_mfcc_nazwa[
-                                                      0:10]  # wybranie 10 cyfr dla danego mówcy i przypisanie ich do klucza (mówcy w słowniku)
+        slownik[str(lista_plikow[i * 10 + 1])[0:3]] = lista_mfcc_nazwa[0:10]  # wybranie 10 cyfr dla danego mówcy i przypisanie ich do klucza (mówcy w słowniku)
     else:
-        slownik[str(lista_plikow[i * 10 + 1])[0:3]] = lista_mfcc_nazwa[10 * i + 1:10 * (i + 1)]
+        slownik[str(lista_plikow[i * 10 + 1])[0:3]] = lista_mfcc_nazwa[(10 * i):(10 * i + 10)]
+
 
 print(len(slownik))  # dlugość 22 - zgadza sie
 print(slownik["AO1"][1][1])
