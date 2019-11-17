@@ -16,11 +16,9 @@ lista_mfcc_nazwa = []  # stworzenie pustej dużej listy
 for i in range(0, len(lista_plikow)):
     nazwa = lista_plikow[i]  # wydobycie nazwy pliku
     fs, dane_z_pliku = wav.read(("C:\\!STUDIA\\Technologia mowy\\PROJEKT 1 - Klasyfikacja cyfr\\train\\" + nazwa))
-    macierz_MFCC = psf.base.mfcc(dane_z_pliku,       # mfcc dla jednego pliku
-                                 samplerate=fs,      # zczytane z wav.read
-                                 numcep=13,          
-                                 nfft=int(0.03*fs),  # nie wiem czemu *0.03, ale tak było
-                                 winfunc=np.hamming)
+    macierz_MFCC=psf.base.mfcc(dane_z_pliku, samplerate=fs,  winlen=0.025, winstep=0.01, numcep=13,
+                                    nfilt=10, nfft=int(0.06*fs), lowfreq=0, highfreq=None, preemph=0.1,
+                                    ceplifter=0, appendEnergy=True, winfunc=np.hamming)
     lista_mfcc_nazwa.append([macierz_MFCC, lista_plikow[i]])  # dodanie mfcc i nazwy do listy
 
 
