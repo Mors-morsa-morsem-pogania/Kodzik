@@ -47,7 +47,7 @@ for cyfra in range(0,10):
 
 def GaussianMix(macierz,n,n_iter):
     gmm=sklearn.mixture.GaussianMixture(n_components=n, covariance_type='diag', tol=0.001, reg_covar=1e-06,
-                                            max_iter=n_iter, n_init=1, init_params='kmeans', weights_init=None,
+                                            max_iter=n_iter, n_init=5, init_params='kmeans', weights_init=None,
                                             means_init=None, precisions_init=None, random_state=None,
                                             warm_start=False, verbose=0, verbose_interval=10)
     gmm.fit(macierz)
@@ -81,20 +81,21 @@ klucze=[*slownik]
 print(klucze)
 print(xvalid)
 
+acc=[]
 for train_ids, test_ids in xvalid.split(slownik):
     X_train = {} #pusty słownik na dane treningowe
     X_test = {} #pusty słownik na dane testowe
     lista_mfcc_nazwa_train=[] #pusta lista na dane treningowe
     lista_mfcc_nazwa_test=[] #pusta lista na dane testowe
-    print("Train: ", train_ids, "Test: ", test_ids)
+    #print("Train: ", train_ids, "Test: ", test_ids)
     for train in train_ids:
         X_train[klucze[train]]=slownik[klucze[train]] #slownik z danymi treningowymi
         for i in range(0,10):
-            lista_mfcc_nazwa_train.append([slownik[klucze[train]][i][0],slownik[klucze[train]][i][1]]) #lista danych treningowych mfcc + nazwa pliku
+            lista_mfcc_nazwa_train.append([X_train[klucze[train]][i][0],X_train[klucze[train]][i][1]]) #lista danych treningowych mfcc + nazwa pliku
     for test in test_ids:
         X_test[klucze[test]] = slownik[klucze[test]] #slownik z danymi testowymi
         for i in range(0, 10):
-            lista_mfcc_nazwa_test.append([slownik[klucze[test]][i][0], slownik[klucze[test]][i][1]])  #lista danych testowych mfcc + nazwa pliku
+            lista_mfcc_nazwa_test.append([X_test[klucze[test]][i][0], X_test[klucze[test]][i][1]])  #lista danych testowych mfcc + nazwa pliku
 
     lista_cyfr_train=[]
     for c in range(0,10):
@@ -107,11 +108,19 @@ for train_ids, test_ids in xvalid.split(slownik):
     lista_gaussianow_train=[] #lista modeli dla cyfr od 0 do 9
     for gaussian in range(0,10):
         lista_gaussianow_train.append(GaussianMix(lista_cyfr_train[gaussian],8,100))
-    a=1
-    #przejść po wszstkich trainach i testach na raz
-    #nowy model będzie stworzony tylko dla mfcc dla mówców z pociągu
-    #stworzenie nowej turbo macierzy mfcc dla pociągu i oddzielnie dla testowych
-    #dwa podsłowniki
+
+    p=[]
+    y_pred=[]
+    for trening in range(0,10):
+        for test in range(0,10):
+            p.append(lista_gaussianow_train[trening].score(lista_cyfr_test[test]))
+        y_pred.append(p.index(max(p)))
+        p=[]
+
+    y_true = [0,1,2,3,4,5,6,7,8,9]
+    acc.append(sklearn.metrics.accuracy_score(y_true,y_pred, normalize=True))
+    #potrzebowałam tego do optymalizacji, i za nic w świecie nie umiem podniesć skuteczności sieci powyzej 82% 
+print(np.mean(acc))
 
 
 a=1
