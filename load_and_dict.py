@@ -107,7 +107,7 @@ for train_ids, test_ids in xvalid.split(slownik):
 
     lista_gaussianow_train=[] #lista modeli dla cyfr od 0 do 9
     for gaussian in range(0,10):
-        lista_gaussianow_train.append(GaussianMix(lista_cyfr_train[gaussian],8,100))
+        lista_gaussianow_train.append(GaussianMix(lista_cyfr_train[gaussian],10,200))
 
     p=[]
     y_pred=[]
@@ -119,7 +119,7 @@ for train_ids, test_ids in xvalid.split(slownik):
 
     y_true = [0,1,2,3,4,5,6,7,8,9]
     acc.append(sklearn.metrics.accuracy_score(y_true,y_pred, normalize=True))
-    #potrzebowałam tego do optymalizacji, i za nic w świecie nie umiem podniesć skuteczności sieci powyzej 82% 
+    #potrzebowałam tego do optymalizacji, i za nic w świecie nie umiem podniesć skuteczności sieci powyzej 82% #edit podbiłam
 print(np.mean(acc))
 
 
