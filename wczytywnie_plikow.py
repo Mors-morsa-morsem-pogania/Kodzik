@@ -19,6 +19,9 @@ for i in range(0, len(lista_plikow)):
     macierz_MFCC=psf.base.mfcc(dane_z_pliku, samplerate=fs,  winlen=0.025, winstep=0.01, numcep=13,
                                     nfilt=10, nfft=int(0.06*fs), lowfreq=0, highfreq=None, preemph=0.1,
                                     ceplifter=0, appendEnergy=True, winfunc=np.hamming)
+    macierz_MFCC_delta = psf.base.delta(macierz_MFCC, 2)
+    macierz_MFCC_delta_delta = psf.base.delta(macierz_MFCC_delta, 2)
+    macierz_MFCC = np.column_stack((macierz_MFCC, macierz_MFCC_delta, macierz_MFCC_delta_delta))
     lista_mfcc_nazwa.append([macierz_MFCC, lista_plikow[i]])  # dodanie mfcc i nazwy do listy
 
 
