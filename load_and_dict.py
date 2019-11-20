@@ -107,7 +107,7 @@ for train_ids, test_ids in xvalid.split(slownik):
 
     lista_gaussianow_train=[] #lista modeli dla cyfr od 0 do 9
     for gaussian in range(0,10):
-        lista_gaussianow_train.append(GaussianMix(lista_cyfr_train[gaussian],10,200))
+        lista_gaussianow_train.append(GaussianMix(lista_cyfr_train[gaussian],10,150))
 
     p=[]
     y_pred=[]
