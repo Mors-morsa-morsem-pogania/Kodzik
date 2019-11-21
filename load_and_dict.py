@@ -48,7 +48,7 @@ for cyfra in range(0,10):
 def GaussianMix(macierz,n,n_iter):
     gmm=sklearn.mixture.GaussianMixture(n_components=n, covariance_type='diag', tol=0.001, reg_covar=1e-06,
                                             max_iter=n_iter, n_init=5, init_params='kmeans', weights_init=None,
-                                            means_init=None, precisions_init=None, random_state=None,
+                                            means_init=None, precisions_init=None, random_state=5,
                                             warm_start=False, verbose=0, verbose_interval=10)
     gmm.fit(macierz)
     return gmm
@@ -122,5 +122,45 @@ for train_ids, test_ids in xvalid.split(slownik):
     #potrzebowałam tego do optymalizacji, i za nic w świecie nie umiem podniesć skuteczności sieci powyzej 82% #edit podbiłam
 print(np.mean(acc))
 
+
+
+nazwa_pliku_eval = 'lista_plikow_eval.pkl'
+pkl_file = open(nazwa_pliku_eval, 'rb')
+
+lista_mfcc_nazwa_eval = pickle.load(pkl_file)
+pkl_file.close()
+
+lista_plikow_eval=[]
+for i in range(0,len(lista_mfcc_nazwa_eval)-1):
+    lista_plikow_eval.append(lista_mfcc_nazwa_eval[i][1]) # nie wiem jak to wydobyć ze środka :/
+
+def co_to_jest_za_cyfra_wg_naszego_modelu(lista_mfcc_nazwa_eval):
+    p=[]
+    y_pred=[]
+    p_score=[]
+    for plik in range(0,len(lista_mfcc_nazwa_eval)):
+
+        for i in range(0, 10):
+            p.append(wszystkie_GMM[i].score(lista_mfcc_nazwa_eval[plik][0]))
+        y_pred.append(p.index(max(p)))
+        p_score.append(max(p))
+        p = []
+
+    return y_pred, p_score
+
+y_pred,p_score=co_to_jest_za_cyfra_wg_naszego_modelu(lista_mfcc_nazwa_eval)
+
+with open('wyniczki.csv', mode='w') as wyniczki:
+    pisacz_wyniczkow = csv.writer(wyniczki, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    for plik in range(0,len(lista_mfcc_nazwa_eval)):
+        pisacz_wyniczkow.writerow([lista_mfcc_nazwa_eval[plik][1], y_pred[plik],p_score[plik]])
+
+    wyniczki.close()
+
+
+from eval import evaluate
+
+# res_dic=load_results("Wyniczki")
+acc,f1,conf=evaluate(results_fname="wyniczki.csv")
 
 a=1
