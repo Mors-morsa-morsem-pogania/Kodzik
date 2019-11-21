@@ -29,3 +29,24 @@ for i in range(0, len(lista_plikow)):
 output = open('lista_mfcc_nazwa.pkl', 'wb')
 pickle.dump(lista_mfcc_nazwa, output)
 output.close()    #ważne!
+
+
+lista_plikow_eval = listdir("E:\Studia\Semestr V\Technologia Mowy\ProjektI\Projekt_nr_1\\eval\\")
+
+lista_mfcc_nazwa_eval=[]
+
+for i in range(0,len(lista_plikow_eval)):
+    nazwa = lista_plikow_eval[i]  # wydobycie nazwy pliku
+    fs, dane_z_pliku = wav.read(("E:\Studia\Semestr V\Technologia Mowy\ProjektI\Projekt_nr_1\\eval\\" + nazwa))
+    macierz_MFCC_eval=psf.base.mfcc(dane_z_pliku, samplerate=fs,  winlen=0.025, winstep=0.01, numcep=13,
+                                    nfilt=10, nfft=int(0.06*fs), lowfreq=0, highfreq=None, preemph=0.97,
+                                    ceplifter=22, appendEnergy=True, winfunc=np.hamming)
+    macierz_MFCC_eval_delta = psf.base.delta(macierz_MFCC_eval, 2)
+    #macierz_MFCC_delta_delta = psf.base.delta(macierz_MFCC_delta, 2)
+    macierz_MFCC = np.column_stack((macierz_MFCC_eval, macierz_MFCC_eval_delta))
+    lista_mfcc_nazwa_eval.append([macierz_MFCC,lista_plikow_eval[i]])
+    # plik_.close()
+
+output = open('lista_plikow_eval.pkl', 'wb')
+pickle.dump(lista_mfcc_nazwa_eval, output)
+output.close()    #ważne!
