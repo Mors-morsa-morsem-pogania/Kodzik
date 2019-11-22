@@ -1,6 +1,18 @@
-"""kluczem będzie mówca, w liście dla jednego mówcy mają być wypisane wszystkie MFCC dla niego i lista nazw plików
-Wszystko będzie w jednym słowniku.
-dict [speakerID] = ( tablicaMFCC, lista_filename)"""
+"""
+    Plik zawiera:
+        - wczytywanie nazw plików .wav do listy
+        - tworzenie macierzy cech MFCC dla każdego pliku
+        - funkcję zapisywania zmiennych do pliku .pkl
+        - funkcję odczytywania plików .pkl do zmiennej
+
+    [Uwaga1] Macierze MFCC zapisywane są w liście zawierającej również nazwę pliku z którego zostały stworzone.
+    [Uwaga2] Pliki .pkl nie nadają się do odczytania przez człowieka, można nimi operować jedynie w zakresie
+    biblioteki [pickle].
+
+    Twórcy:
+        Anna Lizińska, Paula Wajgelt
+        AGH 2019
+"""
 
 from scipy.io import wavfile as wav
 import numpy as np
@@ -8,45 +20,44 @@ from os import listdir
 import pickle
 import python_speech_features as psf
 
+# train_path = input("Podaj ścieżkę dostępu do folderu z plikami treningowymi: ")
+# lista_plikow = listdir(train_path)
+
 #lista_plikow = listdir("E:\Studia\Semestr V\Technologia Mowy\ProjektI\Projekt_nr_1\\train\\")
 lista_plikow = listdir("C:\\!STUDIA\\Technologia mowy\\PROJEKT 1 - Klasyfikacja cyfr\\train\\")
 
-lista_mfcc_nazwa = []  # stworzenie pustej dużej listy
 
-for i in range(0, len(lista_plikow)):
-    nazwa = lista_plikow[i]  # wydobycie nazwy pliku
-    fs, dane_z_pliku = wav.read(("C:\\!STUDIA\\Technologia mowy\\PROJEKT 1 - Klasyfikacja cyfr\\train\\" + nazwa))
-    macierz_MFCC=psf.base.mfcc(dane_z_pliku, samplerate=fs,  winlen=0.025, winstep=0.01, numcep=13,
-                                    nfilt=10, nfft=int(0.06*fs), lowfreq=0, highfreq=None, preemph=0.97,
-                                    ceplifter=22, appendEnergy=True, winfunc=np.hamming)
-    macierz_MFCC_delta = psf.base.delta(macierz_MFCC, 2)
-    #macierz_MFCC_delta_delta = psf.base.delta(macierz_MFCC_delta, 2)
-    macierz_MFCC = np.column_stack((macierz_MFCC, macierz_MFCC_delta))
-    lista_mfcc_nazwa.append([macierz_MFCC, lista_plikow[i]])  # dodanie mfcc i nazwy do listy
+def tworzenie_listy_mfcc_nazwa(lista_plikow, czy_delta, czy_delta_delta):
+    lista_mfcc_nazwa = []  # stworzenie pustej dużej listy
 
+    for plik in range(0, len(lista_plikow)):
+        nazwa = lista_plikow[plik]  # wydobycie nazwy pliku
+        fs, dane_z_pliku = wav.read(("C:\\!STUDIA\\Technologia mowy\\PROJEKT 1 - Klasyfikacja cyfr\\train\\" + nazwa))
+        macierz_MFCC=psf.base.mfcc(dane_z_pliku, samplerate=fs,  winlen=0.025, winstep=0.01, numcep=13,
+                                        nfilt=26, nfft=int(0.06*fs), lowfreq=0, highfreq=None, preemph=0.97,
+                                        ceplifter=22, appendEnergy=True, winfunc=np.hamming)
+        if czy_delta==True:
+            macierz_MFCC_delta = psf.base.delta(macierz_MFCC, 2)
+            macierz_MFCC = np.column_stack((macierz_MFCC, macierz_MFCC_delta))
+            if czy_delta_delta==True:
+                macierz_MFCC_delta_delta = psf.base.delta(macierz_MFCC_delta, 2)
+                macierz_MFCC = np.column_stack((macierz_MFCC, macierz_MFCC_delta_delta))
+
+        lista_mfcc_nazwa.append([macierz_MFCC, lista_plikow[plik]])  # dodanie mfcc i nazwy do listy
+    return lista_mfcc_nazwa
 
 # kiszenie do pliku:
-output = open('lista_mfcc_nazwa.pkl', 'wb')
-pickle.dump(lista_mfcc_nazwa, output)
-output.close()    #ważne!
+def zapisywanie_kiszonki(filename, variable):
+    if filename[-4:] != '.pkl':
+        filename = filename + '.pkl'
+    output = open(filename, 'wb')
+    pickle.dump(variable, output)
+    output.close()    #ważne!
 
-
-lista_plikow_eval = listdir("E:\Studia\Semestr V\Technologia Mowy\ProjektI\Projekt_nr_1\\eval\\")
-
-lista_mfcc_nazwa_eval=[]
-
-for i in range(0,len(lista_plikow_eval)):
-    nazwa = lista_plikow_eval[i]  # wydobycie nazwy pliku
-    fs, dane_z_pliku = wav.read(("E:\Studia\Semestr V\Technologia Mowy\ProjektI\Projekt_nr_1\\eval\\" + nazwa))
-    macierz_MFCC_eval=psf.base.mfcc(dane_z_pliku, samplerate=fs,  winlen=0.025, winstep=0.01, numcep=13,
-                                    nfilt=10, nfft=int(0.06*fs), lowfreq=0, highfreq=None, preemph=0.97,
-                                    ceplifter=22, appendEnergy=True, winfunc=np.hamming)
-    macierz_MFCC_eval_delta = psf.base.delta(macierz_MFCC_eval, 2)
-    #macierz_MFCC_delta_delta = psf.base.delta(macierz_MFCC_delta, 2)
-    macierz_MFCC = np.column_stack((macierz_MFCC_eval, macierz_MFCC_eval_delta))
-    lista_mfcc_nazwa_eval.append([macierz_MFCC,lista_plikow_eval[i]])
-    # plik_.close()
-
-output = open('lista_plikow_eval.pkl', 'wb')
-pickle.dump(lista_mfcc_nazwa_eval, output)
-output.close()    #ważne!
+def odczytywanie_kiszonki(filename, variable):
+    if filename[-4:] != '.pkl':
+        filename = filename + '.pkl'
+    pkl_file = open(filename, 'rb')
+    variable = pickle.load(pkl_file)
+    pkl_file.close()
+    return variable
