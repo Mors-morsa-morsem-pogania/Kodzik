@@ -15,8 +15,7 @@ def accuracy_percent(slownik, n_splits, n_comp, n_iter, n_init, random_state):
 
     :param slownik: Słownik zawierający macierze MFCC na bazie mówców
     :param n_splits: Parametr funkcji KFold o tej samej nazwie
-            Pozostałe parametry wejściowe dotyczą GaussianMix zawartego w funkcji i powinny wynosić tyle, ile
-        wynoszą w modelu treningowym.
+            Pozostałe parametry wejściowe dotyczą GaussianMix zawartego w funkcji.
     :return: Średnia arytmetyczna z Accuracy [%]
 
     """
@@ -65,3 +64,25 @@ def accuracy_percent(slownik, n_splits, n_comp, n_iter, n_init, random_state):
         y_true = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         acc.append(sklearn.metrics.accuracy_score(y_true,y_pred, normalize=True))
     return np.mean(acc)
+
+def co_to_jest_za_cyfra_wg_naszego_modelu(lista_mfcc_nazwa_eval, lista_mfcc_nazwa):
+    lista_cyfr = []
+    for cyfra in range(0, 10):
+        lista_cyfr.append(wszystkie_cyfry(cyfra, lista_mfcc_nazwa))
+
+    wszystkie_GMM = []
+    for gaussian in range(0, 10):
+        wszystkie_GMM.append(GaussianMix(lista_cyfr[gaussian], n_comp=10,
+                                        n_iter=150, n_init=5, random_state=None))
+    p=[]
+    y_pred=[]
+    p_score=[]
+    for plik in range(0,len(lista_mfcc_nazwa_eval)):
+
+        for i in range(0, 10):
+            p.append(wszystkie_GMM[i].score(lista_mfcc_nazwa_eval[plik][0]))
+        y_pred.append(p.index(max(p)))
+        p_score.append(max(p))
+        p = []
+
+    return y_pred, p_score

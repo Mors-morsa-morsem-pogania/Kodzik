@@ -88,6 +88,7 @@ def plot_confusion_matrix(cm, classes,
                 color="white" if cm[i, j] > thresh else "black")
 
     fig.tight_layout()
+    plt.ylim(10 - 0.5, -0.5)
     plt.show()
 
 

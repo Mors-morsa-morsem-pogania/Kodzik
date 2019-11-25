@@ -41,7 +41,7 @@ def wszystkie_cyfry(nr_cyfry,lista_mfcc_nazwa):
     return cyfry
 
 
-def GaussianMix(macierz, n_comp, n_iter, n_init, random_state):
+def GaussianMix(macierz, n_comp=8, n_iter=100, n_init=1, random_state=None):
     gmm=sklearn.mixture.GaussianMixture(n_components=n_comp, covariance_type='diag', tol=0.001, reg_covar=1e-06,
                                             max_iter=n_iter, n_init=n_init, init_params='kmeans', weights_init=None,
                                             means_init=None, precisions_init=None, random_state=random_state,
@@ -59,11 +59,16 @@ def prawdopodobienstwo_cyfry(gmmx, macierz_mfcc_cyfry, lista_mfcc_nazwa):
         wszystkie_GMM.append(GaussianMix(lista_cyfr[gaussian], n_comp=10,
                                          n_iter=150, n_init=5, random_state=None))
 
-    p = np.exp(gmmx.score(macierz_mfcc_cyfry)) * 0.1 / (np.exp(wszystkie_GMM[0].score(macierz_mfcc_cyfry)) * 0.1 + np.exp(wszystkie_GMM[1].score(macierz_mfcc_cyfry)) * 0.1
-                                                        + np.exp(wszystkie_GMM[2].score(macierz_mfcc_cyfry)) * 0.1 + np.exp(wszystkie_GMM[3].score(macierz_mfcc_cyfry)) * 0.1
-                                                        + np.exp(wszystkie_GMM[4].score(macierz_mfcc_cyfry)) * 0.1 + np.exp(wszystkie_GMM[5].score(macierz_mfcc_cyfry)) * 0.1
-                                                        + np.exp(wszystkie_GMM[6].score(macierz_mfcc_cyfry)) * 0.1 + np.exp(wszystkie_GMM[7].score(macierz_mfcc_cyfry)) * 0.1
-                                                        + np.exp(wszystkie_GMM[8].score(macierz_mfcc_cyfry)) * 0.1 + np.exp(wszystkie_GMM[9].score(macierz_mfcc_cyfry)) * 0.1)
+    p = np.exp(gmmx.score(macierz_mfcc_cyfry)) * 0.1 / (np.exp(wszystkie_GMM[0].score(macierz_mfcc_cyfry)) * 0.1
+                                                        + np.exp(wszystkie_GMM[1].score(macierz_mfcc_cyfry)) * 0.1
+                                                        + np.exp(wszystkie_GMM[2].score(macierz_mfcc_cyfry)) * 0.1
+                                                        + np.exp(wszystkie_GMM[3].score(macierz_mfcc_cyfry)) * 0.1
+                                                        + np.exp(wszystkie_GMM[4].score(macierz_mfcc_cyfry)) * 0.1
+                                                        + np.exp(wszystkie_GMM[5].score(macierz_mfcc_cyfry)) * 0.1
+                                                        + np.exp(wszystkie_GMM[6].score(macierz_mfcc_cyfry)) * 0.1
+                                                        + np.exp(wszystkie_GMM[7].score(macierz_mfcc_cyfry)) * 0.1
+                                                        + np.exp(wszystkie_GMM[8].score(macierz_mfcc_cyfry)) * 0.1
+                                                        + np.exp(wszystkie_GMM[9].score(macierz_mfcc_cyfry)) * 0.1)
     return p
 
 # p=[]

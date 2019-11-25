@@ -27,12 +27,12 @@ import python_speech_features as psf
 lista_plikow = listdir("C:\\!STUDIA\\Technologia mowy\\PROJEKT 1 - Klasyfikacja cyfr\\train\\")
 
 
-def tworzenie_listy_mfcc_nazwa(lista_plikow, czy_delta, czy_delta_delta):
+def tworzenie_listy_mfcc_nazwa(lista_plikow, filepath, czy_delta=False, czy_delta_delta=False):
     lista_mfcc_nazwa = []  # stworzenie pustej dużej listy
 
     for plik in range(0, len(lista_plikow)):
         nazwa = lista_plikow[plik]  # wydobycie nazwy pliku
-        fs, dane_z_pliku = wav.read(("C:\\!STUDIA\\Technologia mowy\\PROJEKT 1 - Klasyfikacja cyfr\\train\\" + nazwa))
+        fs, dane_z_pliku = wav.read((filepath + nazwa))
         macierz_MFCC=psf.base.mfcc(dane_z_pliku, samplerate=fs,  winlen=0.025, winstep=0.01, numcep=13,
                                         nfilt=26, nfft=int(0.06*fs), lowfreq=0, highfreq=None, preemph=0.97,
                                         ceplifter=22, appendEnergy=True, winfunc=np.hamming)
@@ -54,10 +54,22 @@ def zapisywanie_kiszonki(filename, variable):
     pickle.dump(variable, output)
     output.close()    #ważne!
 
-def odczytywanie_kiszonki(filename, variable):
+def odczytywanie_kiszonki(filename):
     if filename[-4:] != '.pkl':
         filename = filename + '.pkl'
     pkl_file = open(filename, 'rb')
     variable = pickle.load(pkl_file)
     pkl_file.close()
     return variable
+
+
+lista_mfcc_nazwa = tworzenie_listy_mfcc_nazwa(lista_plikow,
+                                              filepath="C:\\!STUDIA\\Technologia mowy\\PROJEKT 1 - Klasyfikacja cyfr\\train\\",
+                                              czy_delta=True, czy_delta_delta=False)
+zapisywanie_kiszonki('lista_mfcc_nazwa.pkl', lista_mfcc_nazwa)
+
+lista_plikow_eval = listdir("C:\\!STUDIA\\Technologia mowy\\PROJEKT 1 - Klasyfikacja cyfr\\eval\\")
+lista_mfcc_nazwa_eval = tworzenie_listy_mfcc_nazwa(lista_plikow_eval,
+                                                   filepath="C:\\!STUDIA\\Technologia mowy\\PROJEKT 1 - Klasyfikacja cyfr\\eval\\",
+                                                   czy_delta=True, czy_delta_delta=False)
+zapisywanie_kiszonki('lista_mfcc_nazwa_eval.pkl', lista_mfcc_nazwa_eval)
